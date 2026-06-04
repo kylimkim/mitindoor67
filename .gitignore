@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.ipynb_checkpoints/
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Data & datasets (do not commit large image data)
+data/
+datasets/
+Images/
+*.tar
+*.tar.gz
+
+# Models, checkpoints & training artifacts
+data-model/
+*.pt
+*.pth
+*.ckpt
+*.pickle
+*.pkl
+*.npy
+
+# Experiment logs / outputs
+*.log
+result.csv
+wandb/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
