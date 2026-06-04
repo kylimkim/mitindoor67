@@ -1,3 +1,6 @@
+```
+python reorganize_mit67.py --data-dir ../datasets/mit67 --out-dir ../datasets/mit67_split
+```
 
 ---
 ## 🚀 Usage  
@@ -8,16 +11,7 @@
 This step is necessary to collect training dynamics for future coreset selection. DUAL only collects training dynamics during early 60 epochs.
 
 ```
-python train_imagenet.py \
-  --epochs 60 \
-  --lr 0.1 \
-  --scheduler cosine  \
-  --task-name imagenet \
-  --base-dir /path/to/work-dir/imagenet/ \
-  --data-dir /dir/to/data/imagenet \
-  --network resnet34 \
-  --batch-size 256 \
-  --gpuid 0,1
+python train_imagenet.py --epochs 60 --lr 0.1 --scheduler cosine --task-name mit67_full --base-dir ./traj --data-dir ../datasets/mit67_split --network resnet34 --batch-size 64 --gpuid 0
 ```
 
 ## Sample Importance Evaluation
