@@ -233,11 +233,14 @@ if args.iterations is None:
 else:
     num_of_iterations = args.iterations
 
+total_epoch = num_of_iterations // iterations_per_epoch
 if args.epochs_per_testing is not None:
     epoch_per_testing = max(args.epochs_per_testing, 1)
 else:
     epoch_per_testing = max(args.iterations_per_testing // iterations_per_epoch, 1)
-total_epoch = num_of_iterations // iterations_per_epoch
+    # For tiny datasets/coresets the formula above can exceed total_epoch and
+    # never test; cap it so we test at least ~20 times over the whole run.
+    epoch_per_testing = min(epoch_per_testing, max(total_epoch // 20, 1))
 
 print(f'Total epoch: {total_epoch}')
 print(f'Iterations per epoch: {iterations_per_epoch}')
