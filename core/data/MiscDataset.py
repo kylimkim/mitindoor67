@@ -225,14 +225,20 @@ class MITIndoor67Dataset(object):
     MIT Indoor Scene Recognition dataset: 67 indoor categories, ~15620 images.
     See https://web.mit.edu/torralba/www/indoor.html
 
-    Expected directory layout (as distributed):
+    Two directory layouts are supported (auto-detected):
+
+    1) ImageFolder layout (produced by reorganize_mit67.py):
+        <root>/train/<category>/*.jpg
+        <root>/val/<category>/*.jpg        (or test/)
+
+    2) Raw layout (as distributed):
         <root>/Images/<category>/<category>_<id>.jpg
         <root>/TrainImages.txt   (5360 images, 80 per class)
         <root>/TestImages.txt    (1340 images, 20 per class)
-    Each line of the split files is a path relative to the images dir, e.g.
+       Each line of the split files is a path relative to the images dir, e.g.
         airport_inside/airport_inside_0001.jpg
-    If there is no `Images/` subfolder, the category folders are assumed to live
-    directly under <root>.
+       If there is no `Images/` subfolder, the category folders are assumed to
+       live directly under <root>.
     """
 
     num_classes = 67
@@ -247,16 +253,36 @@ class MITIndoor67Dataset(object):
         return images_dir if os.path.isdir(images_dir) else path
 
     @staticmethod
+    def _train_transform():
+        normalize = transforms.Normalize(mean=MITIndoor67Dataset.mean,
+                                         std=MITIndoor67Dataset.std)
+        return transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
+        ])
+
+    @staticmethod
+    def _test_transform():
+        normalize = transforms.Normalize(mean=MITIndoor67Dataset.mean,
+                                         std=MITIndoor67Dataset.std)
+        return transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            normalize,
+        ])
+
+    @staticmethod
     def get_MITIndoor67_train(path, transform=None):
         if transform is None:
-            normalize = transforms.Normalize(mean=MITIndoor67Dataset.mean,
-                                             std=MITIndoor67Dataset.std)
-            transform = transforms.Compose([
-                transforms.RandomResizedCrop(224),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                normalize,
-            ])
+            transform = MITIndoor67Dataset._train_transform()
+        # ImageFolder layout produced by reorganize_mit67.py: <path>/train/<scene>/*.jpg
+        split_dir = os.path.join(path, 'train')
+        if os.path.isdir(split_dir):
+            return datasets.ImageFolder(split_dir, transform)
+        # Raw layout: <path>/Images + TrainImages.txt
         return SplitImageDataset(
             root=MITIndoor67Dataset._images_dir(path),
             split_file=os.path.join(path, 'TrainImages.txt'),
@@ -265,14 +291,13 @@ class MITIndoor67Dataset(object):
     @staticmethod
     def get_MITIndoor67_test(path, transform=None):
         if transform is None:
-            normalize = transforms.Normalize(mean=MITIndoor67Dataset.mean,
-                                             std=MITIndoor67Dataset.std)
-            transform = transforms.Compose([
-                transforms.Resize(256),
-                transforms.CenterCrop(224),
-                transforms.ToTensor(),
-                normalize,
-            ])
+            transform = MITIndoor67Dataset._test_transform()
+        # ImageFolder layout produced by reorganize_mit67.py: <path>/val/<scene>/*.jpg
+        for sub in ('val', 'test'):
+            split_dir = os.path.join(path, sub)
+            if os.path.isdir(split_dir):
+                return datasets.ImageFolder(split_dir, transform)
+        # Raw layout: <path>/Images + TestImages.txt
         return SplitImageDataset(
             root=MITIndoor67Dataset._images_dir(path),
             split_file=os.path.join(path, 'TestImages.txt'),

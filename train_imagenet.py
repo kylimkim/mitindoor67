@@ -52,7 +52,7 @@ parser = argparse.ArgumentParser(description='PyTorch IMageNet Training')
 ######################### Training Setting #########################
 parser.add_argument('--epochs', type=int, metavar='N',
                     help='The number of epochs to train a model.')
-parser.add_argument('--iterations', type=int, default=300000, metavar='N',
+parser.add_argument('--iterations', type=int, default=None, metavar='N',
                     help='The number of iteration to train a model; conflict with --epoch.')
 parser.add_argument('--batch-size', type=int, default=256, metavar='N',
                     help='input batch size for training (default: 256)')
