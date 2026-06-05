@@ -15,14 +15,15 @@ venv/
 env/
 
 # Data & datasets (do not commit large image data)
-data/
-datasets/
-Images/
+# NOTE: leading slash anchors to repo root so we don't ignore code dirs like core/data/
+/data/
+/datasets/
+/Images/
 *.tar
 *.tar.gz
 
 # Models, checkpoints & training artifacts
-data-model/
+/data-model/
 *.pt
 *.pth
 *.ckpt
@@ -40,3 +41,7 @@ wandb/
 Thumbs.db
 .vscode/
 .idea/
+
+# Always track the source code under core/ (overrides any ignore rule above)
+!/core/
+!/core/**
