@@ -39,7 +39,7 @@ python generate_importance_score_imagenet.py \
 ## Train Classifiers on the Pruned Dataset
 #### Random
 ```
-python train_imagenet.py --epochs 120 --epochs-per-testing 5 --lr 0.1 --scheduler cosine --task-name random --base-dir ./traj --data-dir ../datasets/tiny-imagenet-200 --network resnet34 --batch-size 256 --gpuid 0 --num-workers 0 --coreset --coreset-mode random --coreset-ratio 0.1 --ignore-td
+python train_imagenet.py --epochs 120 --epochs-per-testing 5 --lr 0.1 --scheduler cosine --task-name random --base-dir ./traj --data-dir ../datasets/mit67_split --network resnet34 --batch-size 256 --gpuid 0 --coreset --coreset-mode random --coreset-ratio 0.1 --ignore-td
 ```
 
 #### DUAL
